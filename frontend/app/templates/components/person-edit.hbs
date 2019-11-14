@@ -1,5 +1,5 @@
 <div id="profil">
-  {{#with (changeset person validations) as |changeset|}}
+  {{#with (changeset person PersonValidater) as |changeset|}}
     {{#form-for changeset submit=(action 'submit') as |f|}}
       <div class="card-header bg-info">
         <div class="row">

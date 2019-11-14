@@ -34,7 +34,7 @@ person:
     name: Name
     origin: Nationalität
     role: Rolle
-    title: Titel
+    title: Abschluss
     competences: Kompetenzen
     educations: Ausbildungen
     advancedTrainings: Weiterbildungen

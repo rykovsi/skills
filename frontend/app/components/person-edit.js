@@ -6,8 +6,10 @@ import { getNames as countryNames } from "ember-i18n-iso-countries";
 import { on } from "@ember/object/evented";
 import { EKMixin, keyUp } from "ember-keyboard";
 import Person from "../models/person";
+import PersonValidater from "../validators/person";
 
 export default ApplicationComponent.extend(EKMixin, {
+  PersonValidater,
   store: service(),
   intl: service(),
   session: service("keycloak-session"),
@@ -124,33 +126,45 @@ export default ApplicationComponent.extend(EKMixin, {
 
   actions: {
     submit(changeset) {
-      return changeset
-        .save()
-        .then(() =>
-          Promise.all([
-            ...changeset
-              .get("languageSkills")
-              .map(languageSkill =>
-                languageSkill.get("hasDirtyAttributes")
-                  ? languageSkill.save()
-                  : null
-              ),
-            ...changeset
-              .get("peopleRoles")
-              .map(peopleRole =>
-                peopleRole.get("hasDirtyAttributes") ||
-                peopleRole.get("role.id") !=
-                  this.callBackRoleIds[peopleRole.get("id")]
-                  ? peopleRole.save()
-                  : null
+      changeset
+        .validate()
+        .then(() => {
+          if (changeset.get("isValid")) {
+            return changeset
+              .save()
+              .then(() =>
+                Promise.all([
+                  ...changeset
+                    .get("languageSkills")
+                    .map(languageSkill =>
+                      languageSkill.get("hasDirtyAttributes")
+                        ? languageSkill.save()
+                        : null
+                    ),
+                  ...changeset
+                    .get("peopleRoles")
+                    .map(peopleRole =>
+                      peopleRole.get("hasDirtyAttributes") ||
+                      peopleRole.get("role.id") !=
+                        this.callBackRoleIds[peopleRole.get("id")]
+                        ? peopleRole.save()
+                        : null
+                    )
+                ])
               )
-          ])
-        )
-        .then(() => this.set("alreadyAborted", true))
-        .then(() => this.sendAction("submit"))
-        .then(() =>
-          this.get("notify").success("Personalien wurden aktualisiert!")
-        )
+              .then(() => this.set("alreadyAborted", true))
+              .then(() => this.sendAction("submit"))
+              .then(() =>
+                this.get("notify").success("Personalien wurden aktualisiert!")
+              );
+          } else {
+            changeset.get("errors").forEach(error => {
+              this.get("notify").alert(error.key, {
+                closeAfter: 8000
+              });
+            });
+          }
+        })
         .catch(() => {
           let person = this.get("person");
           let errors = person.get("errors").slice(); // clone array as rollbackAttributes mutates
