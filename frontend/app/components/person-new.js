@@ -55,31 +55,31 @@ export default ApplicationComponent.extend({
   },
 
   actions: {
-    submit(changeset) {
-      changeset
+    submit(personChangeset) {
+      personChangeset
         .validate()
         .then(() => {
-          if (changeset.get("isValid")) {
-            return changeset
+          if (personChangeset.get("isValid")) {
+            return personChangeset
               .save()
               .then(() =>
                 Promise.all([
-                  ...changeset
+                  ...personChangeset
                     .get("languageSkills")
                     .map(languageSkill => languageSkill.save()),
                   // Nicht so! peopleRoles an Person anhängen und speichern
-                  ...changeset
+                  ...personChangeset
                     .get("peopleRoles")
                     .map(peopleRole => peopleRole.save())
                 ])
               )
-              .then(() => this.sendAction("submit", changeset))
+              .then(() => this.sendAction("submit", personChangeset))
               .then(() => this.get("notify").success("Person wurde erstellt!"))
               .then(() =>
                 this.get("notify").success("Füge nun ein Profilbild hinzu!")
               );
           } else {
-            changeset.get("errors").forEach(error => {
+            personChangeset.get("errors").forEach(error => {
               this.get("notify").alert(error.key, {
                 closeAfter: 8000
               });
@@ -87,13 +87,13 @@ export default ApplicationComponent.extend({
           }
         })
         .catch(() => {
-          let errors = changeset.get("errors").slice();
+          let errors = personChangeset.get("errors").slice();
 
-          changeset.get("languageSkills").forEach(skill => {
+          personChangeset.get("languageSkills").forEach(skill => {
             errors = errors.concat(skill.get("errors").slice());
           });
 
-          changeset.get("peopleRoles").forEach(peopleRole => {
+          personChangeset.get("peopleRoles").forEach(peopleRole => {
             let prErrors = peopleRole.get("errors").slice();
             const roleIdError = prErrors.findBy("attribute", "role_id");
             prErrors.removeObject(roleIdError);

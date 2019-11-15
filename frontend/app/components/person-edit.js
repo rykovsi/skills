@@ -125,23 +125,23 @@ export default ApplicationComponent.extend(EKMixin, {
   },
 
   actions: {
-    submit(changeset) {
-      changeset
+    submit(personChangeset) {
+      personChangeset
         .validate()
         .then(() => {
-          if (changeset.get("isValid")) {
-            return changeset
+          if (personChangeset.get("isValid")) {
+            return personChangeset
               .save()
               .then(() =>
                 Promise.all([
-                  ...changeset
+                  ...personChangeset
                     .get("languageSkills")
                     .map(languageSkill =>
                       languageSkill.get("hasDirtyAttributes")
                         ? languageSkill.save()
                         : null
                     ),
-                  ...changeset
+                  ...personChangeset
                     .get("peopleRoles")
                     .map(peopleRole =>
                       peopleRole.get("hasDirtyAttributes") ||
@@ -158,7 +158,7 @@ export default ApplicationComponent.extend(EKMixin, {
                 this.get("notify").success("Personalien wurden aktualisiert!")
               );
           } else {
-            changeset.get("errors").forEach(error => {
+            personChangeset.get("errors").forEach(error => {
               this.get("notify").alert(error.key, {
                 closeAfter: 8000
               });
@@ -191,7 +191,7 @@ export default ApplicationComponent.extend(EKMixin, {
             let translated_attribute = this.get("intl").t(
               `person.${attribute}`
             );
-            changeset.pushErrors(attribute, message);
+            personChangeset.pushErrors(attribute, message);
             this.get("notify").alert(`${translated_attribute} ${message}`, {
               closeAfter: 8000
             });

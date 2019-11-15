@@ -1,6 +1,6 @@
 <section id="profil" class="section">
-  {{#with (changeset newPerson PersonValidator) as |changeset|}}
-    {{#form-for changeset newPerson submit=(action 'submit') as |f|}}
+  {{#with (changeset newPerson PersonValidator) as |personChangeset|}}
+    {{#form-for personChangeset newPerson submit=(action 'submit') as |f|}}
       <div class="card-header bg-info">
         <div class="row">
           <div class="col-sm-6 header-text">
@@ -211,7 +211,7 @@
               </table>
             </div>
           </div>
-          <button {{action 'submit' changeset}} role="button" id="submit-button" class="btn btn-primary "> Speichern</button>
+          <button {{action 'submit' personChangeset}} role="button" id="submit-button" class="btn btn-primary "> Speichern</button>
           <button onclick={{action "abortCreate"}} role="button" class="btn abort-button"> Abbrechen</button>
         </div>
       </div>

@@ -3,8 +3,10 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { on } from "@ember/object/evented";
 import { EKMixin, keyUp } from "ember-keyboard";
+import EducationValidator from "../validators/education";
 
 export default Component.extend(EKMixin, {
+  EducationValidator,
   store: service(),
   intl: service(),
 
@@ -40,17 +42,34 @@ export default Component.extend(EKMixin, {
       this.sendAction("done", false);
     },
 
-    submit(newEducation, initNew, event) {
+    submit(educationChangeset, initNew, event) {
       event.preventDefault();
-      let person = this.get("store").peekRecord("person", this.get("personId"));
-      newEducation.set("person", person);
-      return newEducation
-        .save()
-        .then(education => {
-          this.sendAction("done", false);
-          if (initNew) this.sendAction("setInitialState", this);
+      educationChangeset
+        .validate()
+        .then(() => {
+          if (educationChangeset.get("isValid")) {
+            let person = this.get("store").peekRecord(
+              "person",
+              this.get("personId")
+            );
+            educationChangeset.set("person", person);
+            return educationChangeset
+              .save()
+              .then(education => {
+                this.sendAction("done", false);
+                if (initNew) this.sendAction("setInitialState", this);
+              })
+              .then(() =>
+                this.get("notify").success("Ausbildung wurde hinzugefügt!")
+              );
+          } else {
+            educationChangeset.get("errors").forEach(error => {
+              this.get("notify").alert(error.key, {
+                closeAfter: 8000
+              });
+            });
+          }
         })
-        .then(() => this.get("notify").success("Ausbildung wurde hinzugefügt!"))
         .catch(() => {
           this.set("newEducation.person", null);
           this.get("newEducation.errors").forEach(({ attribute, message }) => {
