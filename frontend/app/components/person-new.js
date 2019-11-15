@@ -4,8 +4,10 @@ import { computed } from "@ember/object";
 import { isBlank } from "@ember/utils";
 import { getNames as countryNames } from "ember-i18n-iso-countries";
 import Person from "../models/person";
+import PersonValidator from "../validators/person";
 
 export default ApplicationComponent.extend({
+  PersonValidator,
   intl: service(),
   store: service(),
   router: service(),
@@ -53,31 +55,45 @@ export default ApplicationComponent.extend({
   },
 
   actions: {
-    submit(newPerson) {
-      return newPerson
-        .save()
-        .then(() =>
-          Promise.all([
-            ...newPerson
-              .get("languageSkills")
-              .map(languageSkill => languageSkill.save()),
-            // Nicht so! peopleRoles an Person anhängen und speichern
-            ...newPerson.get("peopleRoles").map(peopleRole => peopleRole.save())
-          ])
-        )
-        .then(() => this.sendAction("submit", newPerson))
-        .then(() => this.get("notify").success("Person wurde erstellt!"))
-        .then(() =>
-          this.get("notify").success("Füge nun ein Profilbild hinzu!")
-        )
+    submit(changeset) {
+      changeset
+        .validate()
+        .then(() => {
+          if (changeset.get("isValid")) {
+            return changeset
+              .save()
+              .then(() =>
+                Promise.all([
+                  ...changeset
+                    .get("languageSkills")
+                    .map(languageSkill => languageSkill.save()),
+                  // Nicht so! peopleRoles an Person anhängen und speichern
+                  ...changeset
+                    .get("peopleRoles")
+                    .map(peopleRole => peopleRole.save())
+                ])
+              )
+              .then(() => this.sendAction("submit", changeset))
+              .then(() => this.get("notify").success("Person wurde erstellt!"))
+              .then(() =>
+                this.get("notify").success("Füge nun ein Profilbild hinzu!")
+              );
+          } else {
+            changeset.get("errors").forEach(error => {
+              this.get("notify").alert(error.key, {
+                closeAfter: 8000
+              });
+            });
+          }
+        })
         .catch(() => {
-          let errors = newPerson.get("errors").slice();
+          let errors = changeset.get("errors").slice();
 
-          newPerson.get("languageSkills").forEach(skill => {
+          changeset.get("languageSkills").forEach(skill => {
             errors = errors.concat(skill.get("errors").slice());
           });
 
-          newPerson.get("peopleRoles").forEach(peopleRole => {
+          changeset.get("peopleRoles").forEach(peopleRole => {
             let prErrors = peopleRole.get("errors").slice();
             const roleIdError = prErrors.findBy("attribute", "role_id");
             prErrors.removeObject(roleIdError);
