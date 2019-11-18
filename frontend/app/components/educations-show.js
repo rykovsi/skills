@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import sortByYear from "../utils/sort-by-year";
-import { computed } from "@ember/object";
+import { computed, observer } from "@ember/object";
 
 export default Component.extend({
   amountOfEducations: computed("sortedEducations", function() {
@@ -8,6 +8,14 @@ export default Component.extend({
   }),
 
   sortedEducations: sortByYear("educations"),
+
+  educationsChanged: observer("educations.@each", function() {
+    if (this.get("educationEditing.isDeleted"))
+      this.set("educationEditing", null);
+    this.send("toggleEducationNew", false);
+    this.send("toggleEducationEditing");
+    this.notifyPropertyChange("sortedEducations");
+  }),
 
   actions: {
     toggleEducationNew(triggerNew) {
@@ -19,6 +27,11 @@ export default Component.extend({
           : sortByYear("educations")
       );
       this.notifyPropertyChange("amountOfEducations");
+    },
+
+    toggleEducationEditing() {
+      this.notifyPropertyChange("sortedEducations");
+      this.set("educationEditing", null);
     }
   }
 });

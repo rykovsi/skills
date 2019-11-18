@@ -399,6 +399,6 @@ $theme-colors: (
   primary: #ff00ff
 ) !default;
 
-input.invalid {
+.invalid {
   box-shadow: 0 0 3px #cc0000;
 }
