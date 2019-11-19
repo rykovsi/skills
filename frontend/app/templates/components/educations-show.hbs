@@ -15,15 +15,17 @@
                   personId=person.id
                   done=(action 'toggleEducationNew')}}
       {{#each sortedEducations as |education|}}
-        {{#if (eq educationEditing education)}}
-          {{education-edit
+        <div class="zeile">
+          {{#if (eq educationEditing education)}}
+            {{education-edit
             education=educationEditing
             done=(action 'toggleEducationEditing')}}
-        {{else}}
-          {{education-show selectEducation = (if (or educationEditing educationNew)
+          {{else}}
+            {{education-show selectEducation = (if (or educationEditing educationNew)
              null (action (mut educationEditing)))
              education=education}}
-        {{/if}}
+          {{/if}}
+        </div>
       {{/each}}
     </div>
   </div>

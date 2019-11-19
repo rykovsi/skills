@@ -1,6 +1,6 @@
 <section id="profil" class="section">
   {{#with (changeset newPerson PersonValidator) as |personChangeset|}}
-    {{#form-for personChangeset newPerson submit=(action 'submit') as |f|}}
+    {{#form-for personChangeset newPerson submit=(action 'submit') as |person|}}
       <div class="card-header bg-info">
         <div class="row">
           <div class="col-sm-6 header-text">
@@ -14,13 +14,13 @@
             <div class="col-sm-4">
               <table class="table-person mb-3">
                 <tr>
-                  <td>{{f.text-field 'name' label="Name"}}</td>
+                  <td>{{person.text-field 'name' label="Name"}}</td>
                 </tr>
                 <tr>
-                  <td>{{f.text-field 'email' label="Email"}}</td>
+                  <td>{{person.text-field 'email' label="Email"}}</td>
                 </tr>
                 <tr>
-                  <td>{{f.text-field 'title' label="Abschluss"}}</td>
+                  <td>{{person.text-field 'title' label="Abschluss"}}</td>
                 </tr>
                 <tr>
                   <label>Funktionen</label>
@@ -82,12 +82,12 @@
                     <label>Organisationseinheit</label>
                     {{#power-select
                       triggerId="department"
-                      selected=newPerson.department
+                      selected=personChangeset.department
                       options=departments
                       searchField="name"
                       onfocus=(action "handleFocus")
                       onblur=(action "handleBlur")
-                      onchange=(action (mut newPerson.department))
+                      onchange=(action (mut personChangeset.department))
                       onkeydown=(action "setWithTab" 'setDepartment')
                       as |department|
                       }}
@@ -100,11 +100,11 @@
                     <label>Firma/Kategorie</label>
                     {{#power-select
                       triggerId="company"
-                      selected=newPerson.company
+                      selected=personChangeset.company
                       options=companiesToSelect
                       onfocus=(action "handleFocus")
                       onblur=(action "handleBlur")
-                      onchange=(action (mut newPerson.company))
+                      onchange=(action (mut personChangeset.company))
                       onkeydown=(action "setWithTab" 'setCompany')
                       as |company|
                       }}
@@ -113,7 +113,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>{{f.text-field 'location' label="Wohnort (Stadt)"}}</td>
+                  <td>{{person.text-field 'location' label="Wohnort (Stadt)"}}</td>
                 </tr>
               </table>
             </div>
@@ -123,9 +123,9 @@
                   <td>
                     <div class="text-field form-group">
                       <label class="label-date form-field--label" for='date_location'>Geburtsdatum</label>
-                      <div id="date_location" class="birthdate_pikaday">
+                      <div id="date_location" class="rson.date_pikaday">
                         {{pikaday-input
-                          onSelection=(action "setBirthdate")
+                          onSelection=(action (mut personChangeset.birthdate))
                           value=newPerson.birthdate
                           useUTC=true}}
                       </div>
@@ -212,7 +212,7 @@
             </div>
           </div>
           <button {{action 'submit' personChangeset}} role="button" id="submit-button" class="btn btn-primary "> Speichern</button>
-          <button onclick={{action "abortCreate"}} role="button" class="btn abort-button"> Abbrechen</button>
+          <button onclick={{action "abortCreate" personChangeset}} role="button" class="btn abort-button"> Abbrechen</button>
         </div>
       </div>
     {{/form-for}}

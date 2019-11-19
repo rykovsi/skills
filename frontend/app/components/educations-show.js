@@ -7,7 +7,7 @@ export default Component.extend({
     return this.get("sortedEducations.length");
   }),
 
-  sortedEducations: sortByYear("educations"),
+  sortedEducations: sortByYear("educations").volatile(),
 
   educationsChanged: observer("educations.@each", function() {
     if (this.get("educationEditing.isDeleted"))

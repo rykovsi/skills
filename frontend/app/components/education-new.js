@@ -37,9 +37,13 @@ export default Component.extend(EKMixin, {
   },
 
   actions: {
-    abortNew(event) {
-      event.preventDefault();
-      this.sendAction("done", false);
+    abortNew(educationChangeset) {
+      educationChangeset.rollback();
+      let education = this.get("newEducation");
+      if (education.get("hasDirtyAttributes")) {
+        education.rollbackAttributes();
+      }
+      this.done();
     },
 
     submit(educationChangeset, initNew, event) {

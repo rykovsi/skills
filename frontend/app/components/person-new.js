@@ -111,7 +111,8 @@ export default ApplicationComponent.extend({
         });
     },
 
-    abortCreate() {
+    abortCreate(personChangeset) {
+      personChangeset.rollback();
       this.get("newPerson").destroyRecord();
       this.get("router").transitionTo("people");
     },
@@ -123,10 +124,6 @@ export default ApplicationComponent.extend({
     },
 
     handleBlur() {},
-
-    setBirthdate(selectedDate) {
-      this.set("newPerson.birthdate", selectedDate);
-    },
 
     setOrigin(selectedCountry) {
       this.set("newPerson.origin", selectedCountry[1]);
@@ -150,10 +147,6 @@ export default ApplicationComponent.extend({
 
     setDepartment(department) {
       this.set("newPerson.department", department);
-    },
-
-    setCompany(company) {
-      this.set("newPerson.company", company);
     },
 
     setRole(peopleRole, selectedRole) {

@@ -1,9 +1,7 @@
 import Component from "@ember/component";
 import { inject as service } from "@ember/service";
-import sortByYear from "../utils/sort-by-year";
 import { on } from "@ember/object/evented";
 import { EKMixin, keyUp } from "ember-keyboard";
-import { observer } from "@ember/object";
 import EducationValidator from "../validators/education";
 
 export default Component.extend(EKMixin, {
