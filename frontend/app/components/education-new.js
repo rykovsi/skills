@@ -39,10 +39,6 @@ export default Component.extend(EKMixin, {
   actions: {
     abortNew(educationChangeset) {
       educationChangeset.rollback();
-      let education = this.get("newEducation");
-      if (education.get("hasDirtyAttributes")) {
-        education.rollbackAttributes();
-      }
       this.done();
     },
 
@@ -75,13 +71,14 @@ export default Component.extend(EKMixin, {
           }
         })
         .catch(() => {
-          this.set("newEducation.person", null);
-          this.get("newEducation.errors").forEach(({ attribute, message }) => {
+          let errors = educationChangeset.get("errors").slice();
+
+          errors.forEach(({ attribute, message }) => {
             let translated_attribute = this.get("intl").t(
-              `education.${attribute}`
+              `person.${attribute}`
             );
             this.get("notify").alert(`${translated_attribute} ${message}`, {
-              closeAfter: 10000
+              closeAfter: 8000
             });
           });
         });

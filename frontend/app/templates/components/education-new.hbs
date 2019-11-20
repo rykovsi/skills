@@ -1,5 +1,5 @@
 {{#with (changeset newEducation EducationValidator) as |educationChangeset|}}
-{{#form-for educationChangeset newEducation submit=(action 'submit') as |f|}}
+  {{#form-for educationChangeset newEducation submit=(action 'submit') as |f|}}
     <div id="newEducation-content-edit" class="zeile">
       <div class="row">
         <div class="col-sm-3">
