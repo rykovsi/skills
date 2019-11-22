@@ -22,6 +22,6 @@ test("amount of educations", async function(assert) {
   await page.educations.confirm();
   await page.educations.submit();
 
-  assert.equal(page.educations.list().count, 0);
-  assert.equal(page.educations.amountOf, "Ausbildung (0)");
+  assert.equal(page.educations.list().count, 1);
+  assert.equal(page.educations.amountOf, "Ausbildung (1)");
 });

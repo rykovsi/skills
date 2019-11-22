@@ -1,22 +1,20 @@
-{{#with (changeset newEducation EducationValidator) as |educationChangeset|}}
-  {{#form-for educationChangeset newEducation submit=(action 'submit') as |f|}}
-    <div id="newEducation-content-edit" class="zeile">
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="input-group centered-content-input">
-            {{daterange-edit entity=newEducation}}
-          </div>
-        </div>
-        <div class="col-sm-6 content-input">
-          {{f.text-field 'title' label='Ausbildung' inputClasses="input-xxlarge form-control"}}
-          {{f.textarea-field 'location' label='Ausbildungsort' inputClasses="input-xxlarge form-control"}}
-        </div>
-        <div class="col-md-3 centered-content d-flex flex-column mt-4 px-5">
-          <button onclick={{action 'submit' educationChangeset false}} role="button" id="submit-button" class="btn btn-primary m-2">Speichern</button>
-          <button onclick={{action 'submit' educationChangeset true}} role="button" class="btn btn-info border m-2">Speichern & Neu</button>
-          <button onclick={{action 'abortNew' educationChangeset}} role="button" id="submit-button" class="btn abort-button text-center mx-4">Abbrechen</button>
+{{#form-for educationChangeset submit=(action 'submit') as |f|}}
+  <div id="newEducation-content-edit" class="zeile">
+    <div class="row">
+      <div class="col-sm-3">
+        <div class="input-group centered-content-input">
+          {{daterange-edit entity=newEducation}}
         </div>
       </div>
+      <div class="col-sm-6 content-input">
+        {{f.text-field 'title' label='Ausbildung' inputClasses="input-xxlarge form-control"}}
+        {{f.textarea-field 'location' label='Ausbildungsort' inputClasses="input-xxlarge form-control"}}
+      </div>
+      <div class="col-md-3 centered-content d-flex flex-column mt-4 px-5">
+        <button onclick={{action 'submit' false}} role="button" id="submit-button" class="btn btn-primary m-2">Speichern</button>
+        <button onclick={{action 'submit' true}} role="button" class="btn btn-info border m-2">Speichern & Neu</button>
+        <button onclick={{action 'abortNew'}} role="button" id="submit-button" class="btn abort-button text-center mx-4">Abbrechen</button>
+      </div>
     </div>
-  {{/form-for}}
-{{/with}}
+  </div>
+{{/form-for}}
