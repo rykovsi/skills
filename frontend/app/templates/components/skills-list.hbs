@@ -22,6 +22,8 @@
         </a>
       </div>
     </div>
+  </div>
+<p style="display: block; height: 110px" /> 
 <div class="mb-end">
   <SkillNew @refreshList={{action "refreshList"}} />
   <table id="skills-list-table" class="table">
@@ -37,7 +39,7 @@
         <th scope="col" class="w-9 text-secondary">Bearbeiten</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="mt-5">
       {{#each this.sortedSkills as |skill|}}
         {{#if (array-contains this.editSkills skill)}}
           <SkillsListRowEdit @skill={{skill}} @parentCategories={{this.parentCategories}} @childCategories={{this.childCategories}} @stopEditing={{action "stopEditing" skill}} />
@@ -47,7 +49,6 @@
       {{/each}}
     </tbody>
   </table>
-</div>
 </div>
 <script>
   $(document).ready(() => {
