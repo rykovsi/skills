@@ -309,6 +309,11 @@ div.row-fluid.person-list > div.span10 > div.container-fluid.round-border {
   top: 80px;
 }
 
+#skill-list-spacing {
+  display: block;
+  height: 110px;
+}
+
 #skills-list-table thead th:nth-of-type(even) {
   background: #e5e5e5;
 }
@@ -329,12 +334,6 @@ div.row-fluid.person-list > div.span10 > div.container-fluid.round-border {
 #skills-list-table thead {
   top: 203px;
   z-index: 999 !important;
-}
-
-#skills-list-table tbody:before {
-  content: "";
-  display: block;
-  height: 110px;
 }
 
 #skills-list-table th {
