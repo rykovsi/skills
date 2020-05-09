@@ -72,5 +72,6 @@ lain:
   roles: [system-engineer]
   title: God
   competence_notes: C\n Bash
+  company: partner
   email: lain@mebious.co.uk
   department: sys
